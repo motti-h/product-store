@@ -9,8 +9,8 @@ export function productGetHandler(req: Request, res: Response, next: NextFunctio
 }
 
 export function productGetSpecificHandler(req: Request, res: Response, next: NextFunction): any {
-    const id = req.params.id;
-    const existing = products.find(p => p.id === id);
+    const id = req.params.id; // url params
+    const existing = isProductExist(id);
 
     if (!existing) {
         next();
@@ -24,14 +24,14 @@ export function productPostHandler(req: Request, res: Response, next: NextFuncti
     if( pr.name.length < 3) {
         next();
     }
-    pr.id = store.products.length.toString();
+    pr.id = (store.products.length + 1).toString();
     store.products.push(pr);
     res.sendStatus(201);
 }
 
 export function productPutHandler(req: Request, res: Response, next: NextFunction): any {
     const id = req.params.id;
-    const existing = products.find(p => p.id === id.toString());
+    const existing = isProductExist(id);
 
     if (!existing) {
        next();
@@ -65,4 +65,8 @@ export function error404Handler(req: Request, res: Response, next: NextFunction)
 
 export function error409Handler(req: Request, res: Response, next: NextFunction): any{
     res.sendStatus(409);
+}
+
+function isProductExist(id: number): Product | undefined {
+    return products.find(p => p.id === id.toString());
 }
