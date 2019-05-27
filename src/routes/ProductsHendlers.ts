@@ -31,8 +31,13 @@ export function productPostHandler(req: Request, res: Response, next: NextFuncti
 
 export function productPutHandler(req: Request, res: Response, next: NextFunction): any {
     const id = req.params.id;
-    const existing = isProductExist(id);
 
+    if (isNaN(id)) {
+        res.send(400);
+        return;
+    }
+
+    const existing = isProductExist(id);
     if (!existing) {
        next();
        return;
